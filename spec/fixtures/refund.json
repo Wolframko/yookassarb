@@ -1,0 +1,10 @@
+{
+  "id": "2a7834f6-refund-5000-a000-1da326e5e123",
+  "status": "succeeded",
+  "amount": {
+    "value": "50.00",
+    "currency": "RUB"
+  },
+  "payment_id": "2a7834f6-0001-5000-a000-1da326e5e123",
+  "created_at": "2024-01-15T12:00:00.000Z"
+}
