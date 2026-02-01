@@ -14,14 +14,11 @@ module Yookassa
     end
 
     def validate!
-      if auth_token.nil? || auth_token.to_s.empty?
-        if shop_id.nil? || shop_id.to_s.empty?
-          raise Yookassa::Error, "shop_id is required (or provide auth_token)"
-        end
-        if api_key.nil? || api_key.to_s.empty?
-          raise Yookassa::Error, "api_key is required (or provide auth_token)"
-        end
-      end
+      return unless auth_token.nil? || auth_token.to_s.empty?
+      raise Yookassa::Error, "shop_id is required (or provide auth_token)" if shop_id.nil? || shop_id.to_s.empty?
+      return unless api_key.nil? || api_key.to_s.empty?
+
+      raise Yookassa::Error, "api_key is required (or provide auth_token)"
     end
 
     def credentials

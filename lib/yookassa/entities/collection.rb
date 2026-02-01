@@ -12,8 +12,8 @@ module Yookassa
         @next_cursor = next_cursor
       end
 
-      def each(&block)
-        @items.each(&block)
+      def each(&)
+        @items.each(&)
       end
 
       def size

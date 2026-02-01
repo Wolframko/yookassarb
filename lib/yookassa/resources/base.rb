@@ -22,12 +22,8 @@ module Yookassa
         response = connection.public_send(method) do |req|
           req.url path
           req.params = query if query
-          if body
-            req.body = JSON.generate(body)
-          end
-          if idempotency_key && %i[post delete].include?(method)
-            req.headers["Idempotence-Key"] = idempotency_key
-          end
+          req.body = JSON.generate(body) if body
+          req.headers["Idempotence-Key"] = idempotency_key if idempotency_key && %i[post delete].include?(method)
         end
 
         parse_response(response)
