@@ -1,0 +1,72 @@
+---
+# Exclude generated code and spec files from analysis
+exclude_paths:
+  - generated/
+  - spec/
+  - vendor/
+
+detectors:
+  # Configuration classes legitimately use attr_accessor
+  Attribute:
+    exclude:
+      - "Yookassa::Configuration"
+
+  # respond_to_missing? requires include_private by Ruby convention
+  BooleanParameter:
+    exclude:
+      - "Yookassa::Entities::Base#respond_to_missing?"
+
+  # EventTypes is a constants module by design
+  TooManyConstants:
+    exclude:
+      - "Yookassa::Webhook::EventTypes"
+
+  # Retry pattern inherently calls the retry helper from two paths (status-based and exception-based)
+  DuplicateMethodCall:
+    exclude:
+      - "Yookassa::Middleware::Retry#call"
+
+  # Middleware and resource helpers work with env/conn/creds objects by design (Faraday pattern)
+  FeatureEnvy:
+    exclude:
+      - "Yookassa::Middleware::ErrorHandler#on_complete"
+      - "Yookassa::Middleware::Idempotency#on_request"
+      - "Yookassa::Middleware::Retry#prepare_retry"
+      - "Yookassa::Resources::Base#build_collection"
+      - "Yookassa::Resources::Base#build_connection"
+      - "Yookassa::Resources::Base#configure_auth"
+      - "Yookassa::Resources::Base#configure_middleware"
+      - "Yookassa::Resources::Base#request"
+
+  # Faraday::Middleware sets @app via super(app); ResourceShortcut sets @resource_method via delegates_to
+  InstanceVariableAssumption:
+    exclude:
+      - "Yookassa::Middleware::Retry"
+      - "Yookassa::ResourceShortcut"
+
+  # Keyword args with defaults is idiomatic Ruby for HTTP request methods
+  LongParameterList:
+    exclude:
+      - "Yookassa::Resources::Base#request"
+
+  # Methods with case/when branches, multiple extraction steps, or config assignments
+  TooManyStatements:
+    exclude:
+      - "Yookassa::Client#initialize"
+      - "Yookassa::Entities::Base#wrap_value"
+      - "Yookassa::Middleware::ErrorHandler#on_complete"
+      - "Yookassa::Middleware::Retry#call"
+      - "Yookassa::Resources::Base#request"
+      - "Yookassa::Webhook::Notification#self.parse"
+
+  # RuboCop Naming/RescuedExceptionsVariableName requires `e`; reek conflicts
+  UncommunicativeVariableName:
+    exclude:
+      - "Yookassa::Middleware::Retry#call"
+
+  # Private helper methods that don't need instance state
+  UtilityFunction:
+    exclude:
+      - "Yookassa::Middleware::ErrorHandler#parse_error_body"
+      - "Yookassa::Resources::Base#configure_headers"
+      - "Yookassa::Resources::Base#parse_response"

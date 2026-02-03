@@ -18,16 +18,18 @@ module Yookassa
       def on_complete(env)
         return if env.success?
 
-        error_class = ERROR_MAP[env.status] || Yookassa::ApiError
-        error_data = parse_error_body(env.body)
+        status = env.status
+        body = env.body
+        error_class = ERROR_MAP[status] || Yookassa::ApiError
+        error_data = parse_error_body(body)
 
         raise error_class.new(
           code: error_data[:code],
           description: error_data[:description],
           parameter: error_data[:parameter],
           response: {
-            http_code: env.status,
-            body: env.body,
+            http_code: status,
+            body: body,
             headers: env.response_headers
           }
         )
@@ -36,7 +38,7 @@ module Yookassa
       private
 
       def parse_error_body(body)
-        return {} if body.nil? || body.empty?
+        return {} if body.to_s.empty?
 
         parsed = JSON.parse(body)
         {

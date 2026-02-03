@@ -23,11 +23,12 @@ module Yookassa
 
       def self.parse(json_or_hash)
         data = json_or_hash.is_a?(String) ? JSON.parse(json_or_hash) : json_or_hash
-        entity_type = data["event"].to_s.split(".").first
+        event = data["event"]
+        entity_type = event.to_s.split(".").first
         entity_class = ENTITY_MAP[entity_type] || Entities::Base
 
         new(
-          event: data["event"],
+          event: event,
           type: data["type"],
           object: entity_class.new(data["object"] || {})
         )
