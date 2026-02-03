@@ -2,6 +2,7 @@
 
 module Yookassa
   module Resources
+    # REST resource for /v3/refunds endpoint
     class Refund < Base
       def create(params, idempotency_key: nil)
         data = request(:post, "refunds", body: params, idempotency_key: idempotency_key)
@@ -14,12 +15,7 @@ module Yookassa
       end
 
       def list(**filters)
-        data = request(:get, "refunds", query: filters)
-        Entities::Collection.new(
-          items: data["items"] || [],
-          next_cursor: data["next_cursor"],
-          entity_class: Entities::Refund
-        )
+        build_collection("refunds", entity_class: Entities::Refund, query: filters)
       end
     end
   end

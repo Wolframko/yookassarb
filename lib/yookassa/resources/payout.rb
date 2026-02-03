@@ -2,6 +2,7 @@
 
 module Yookassa
   module Resources
+    # REST resource for /v3/payouts endpoint
     class Payout < Base
       def create(params, idempotency_key: nil)
         data = request(:post, "payouts", body: params, idempotency_key: idempotency_key)
@@ -14,12 +15,7 @@ module Yookassa
       end
 
       def list(**filters)
-        data = request(:get, "payouts", query: filters)
-        Entities::Collection.new(
-          items: data["items"] || [],
-          next_cursor: data["next_cursor"],
-          entity_class: Entities::Payout
-        )
+        build_collection("payouts", entity_class: Entities::Payout, query: filters)
       end
     end
   end

@@ -4,6 +4,7 @@ require "json"
 
 module Yookassa
   module Middleware
+    # Faraday middleware that maps HTTP error responses to custom exceptions
     class ErrorHandler < Faraday::Middleware
       ERROR_MAP = {
         400 => Yookassa::BadRequestError,
@@ -21,13 +22,14 @@ module Yookassa
         error_data = parse_error_body(env.body)
 
         raise error_class.new(
-          error_data[:description],
           code: error_data[:code],
           description: error_data[:description],
           parameter: error_data[:parameter],
-          http_code: env.status,
-          response_body: env.body,
-          response_headers: env.response_headers
+          response: {
+            http_code: env.status,
+            body: env.body,
+            headers: env.response_headers
+          }
         )
       end
 

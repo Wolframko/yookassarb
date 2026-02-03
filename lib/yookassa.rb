@@ -35,6 +35,7 @@ require_relative "yookassa/webhook/event_types"
 require_relative "yookassa/webhook/notification"
 require_relative "yookassa/webhook/ip_checker"
 
+# Main module for YooKassa payment gateway Ruby gem
 module Yookassa
   class << self
     def configure
@@ -65,6 +66,7 @@ module Yookassa
   end
 
   # Class-level shortcuts delegating to default_client
+  # Provides convenient class methods for payment operations
   class Payment
     class << self
       def create(params, idempotency_key: nil)
@@ -89,6 +91,7 @@ module Yookassa
     end
   end
 
+  # Provides convenient class methods for refund operations
   class Refund
     class << self
       def create(params, idempotency_key: nil)
@@ -105,6 +108,7 @@ module Yookassa
     end
   end
 
+  # Provides convenient class methods for receipt operations
   class Receipt
     class << self
       def create(params, idempotency_key: nil)
@@ -121,6 +125,7 @@ module Yookassa
     end
   end
 
+  # Provides convenient class methods for payout operations
   class Payout
     class << self
       def create(params, idempotency_key: nil)
@@ -137,6 +142,7 @@ module Yookassa
     end
   end
 
+  # Provides convenient class methods for deal operations
   class Deal
     class << self
       def create(params, idempotency_key: nil)
@@ -153,6 +159,7 @@ module Yookassa
     end
   end
 
+  # Namespace for webhook notification handling and IP validation
   module Webhook
     # Webhook::Notification and Webhook::IpChecker are loaded via require_relative above
   end

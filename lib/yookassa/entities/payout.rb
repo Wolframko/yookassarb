@@ -2,6 +2,7 @@
 
 module Yookassa
   module Entities
+    # Payout entity with status helpers
     class Payout < Base
       def succeeded?
         status == "succeeded"

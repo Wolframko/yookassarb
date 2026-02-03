@@ -2,6 +2,7 @@
 
 module Yookassa
   module Entities
+    # Payment entity with status helpers and confirmation URL access
     class Payment < Base
       def confirmation_url
         return nil unless attributes["confirmation"]
