@@ -3,7 +3,7 @@
 require_relative "lib/yookassa/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "yookassa"
+  spec.name = "yookassarb"
   spec.version = Yookassa::VERSION
   spec.authors = ["Wolfram"]
   spec.summary = "Ruby SDK for YooKassa payment API"

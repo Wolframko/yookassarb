@@ -1,6 +1,6 @@
 # YooKassa Ruby SDK
 
-[![Gem Version](https://img.shields.io/gem/v/yookassa.svg)](https://rubygems.org/gems/yookassa)
+[![Gem Version](https://img.shields.io/gem/v/yookassarb.svg)](https://rubygems.org/gems/yookassarb)
 [![Ruby](https://img.shields.io/badge/ruby-%3E%3D%203.1-ruby.svg)](https://www.ruby-lang.org)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
@@ -10,20 +10,20 @@
 
 ```ruby
 # Gemfile
-gem "yookassa"
+gem "yookassarb"
 ```
 
 ```bash
 bundle install
 
 # или напрямую
-gem install yookassa
+gem install yookassarb
 ```
 
 ## Быстрый старт
 
 ```ruby
-require "yookassa"
+require "yookassarb"
 
 Yookassa.configure do |config|
   config.shop_id = "your_shop_id"
@@ -351,7 +351,7 @@ HTTP-ошибки автоматически преобразуются в ти�
 bundle install
 bundle exec rspec          # запуск тестов
 bundle exec rubocop        # линтинг
-gem build yookassa.gemspec # сборка гема
+gem build yookassarb.gemspec # сборка гема
 ```
 
 ## Лицензия
