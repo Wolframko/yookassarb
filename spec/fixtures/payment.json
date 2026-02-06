@@ -1,0 +1,22 @@
+{
+  "id": "2a7834f6-0001-5000-a000-1da326e5e123",
+  "status": "pending",
+  "amount": {
+    "value": "100.00",
+    "currency": "RUB"
+  },
+  "description": "Order #72",
+  "recipient": {
+    "account_id": "123456",
+    "gateway_id": "654321"
+  },
+  "created_at": "2024-01-15T10:00:00.000Z",
+  "confirmation": {
+    "type": "redirect",
+    "confirmation_url": "https://yoomoney.ru/checkout/payments/v2/contract?orderId=123"
+  },
+  "test": true,
+  "paid": false,
+  "refundable": false,
+  "metadata": {}
+}

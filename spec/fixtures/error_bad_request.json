@@ -1,0 +1,7 @@
+{
+  "type": "error",
+  "id": "err-123",
+  "code": "invalid_request",
+  "description": "Missing required parameter 'amount'",
+  "parameter": "amount"
+}

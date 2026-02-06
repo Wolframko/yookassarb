@@ -1,0 +1,15 @@
+# Yookassa::B2bSberbankVatDataType
+
+## Properties
+
+| Name | Type | Description | Notes |
+| ---- | ---- | ----------- | ----- |
+
+## Example
+
+```ruby
+require 'yookassarb'
+
+instance = Yookassa::B2bSberbankVatDataType.new()
+```
+
