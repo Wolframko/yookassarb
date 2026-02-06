@@ -6,7 +6,7 @@ SimpleCov.start do
   add_filter "/generated/"
 end
 
-require "yookassa"
+require "yookassarb"
 require "webmock/rspec"
 
 WebMock.disable_net_connect!

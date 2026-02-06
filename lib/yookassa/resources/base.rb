@@ -90,7 +90,7 @@ module Yookassa
         conn.request :json
         headers = conn.headers
         headers["Content-Type"] = "application/json"
-        headers["User-Agent"] = "yookassa-ruby/#{Yookassa::VERSION}"
+        headers["User-Agent"] = "yookassarb/#{Yookassa::VERSION}"
       end
 
       def configure_auth(conn)
