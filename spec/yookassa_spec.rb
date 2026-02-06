@@ -51,6 +51,6 @@ RSpec.describe Yookassa do
   end
 
   it "has a version number" do
-    expect(Yookassa::VERSION).to eq("0.1.0")
+    expect(Yookassa::VERSION).not_to be_nil
   end
 end

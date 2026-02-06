@@ -4,6 +4,7 @@
 *.gem
 Gemfile.lock
 .ruby-lsp/
+.yardoc/
 /generated/
 yookassa-openapi-specification.yaml
 openapitools.json
