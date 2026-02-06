@@ -48,7 +48,11 @@ module Yookassa
         when Hash
           data.transform_keys(&:to_s)
         else
-          data.to_h.transform_keys(&:to_s) rescue {}
+          begin
+            data.to_h.transform_keys(&:to_s)
+          rescue StandardError
+            {}
+          end
         end
       end
     end
