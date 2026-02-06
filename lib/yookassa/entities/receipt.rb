@@ -2,6 +2,7 @@
 
 module Yookassa
   module Entities
+    # Receipt entity with status helpers
     class Receipt < Base
       def succeeded?
         status == "succeeded"

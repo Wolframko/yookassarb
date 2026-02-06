@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Yookassa
+  # API client that holds configuration and provides access to resource endpoints
   class Client
     attr_reader :config
 

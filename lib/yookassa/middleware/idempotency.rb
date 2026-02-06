@@ -4,6 +4,7 @@ require "securerandom"
 
 module Yookassa
   module Middleware
+    # Faraday middleware that adds idempotency key to POST and DELETE requests
     class Idempotency < Faraday::Middleware
       IDEMPOTENCY_HEADER = "Idempotence-Key"
 
@@ -14,9 +15,11 @@ module Yookassa
 
       def on_request(env)
         return unless %i[post delete].include?(env.method)
-        return if env.request_headers[IDEMPOTENCY_HEADER]
 
-        env.request_headers[IDEMPOTENCY_HEADER] = @idempotency_key || SecureRandom.uuid
+        headers = env.request_headers
+        return if headers[IDEMPOTENCY_HEADER]
+
+        headers[IDEMPOTENCY_HEADER] = @idempotency_key || SecureRandom.uuid
       end
     end
   end

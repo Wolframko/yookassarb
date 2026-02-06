@@ -2,6 +2,7 @@
 
 module Yookassa
   module Entities
+    # Refund entity with status helpers
     class Refund < Base
       def succeeded?
         status == "succeeded"

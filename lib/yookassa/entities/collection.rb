@@ -2,6 +2,7 @@
 
 module Yookassa
   module Entities
+    # Paginated collection of entities with cursor-based navigation
     class Collection
       include Enumerable
 
@@ -26,7 +27,7 @@ module Yookassa
       end
 
       def has_next?
-        !@next_cursor.nil? && !@next_cursor.empty?
+        !@next_cursor.to_s.empty?
       end
     end
   end

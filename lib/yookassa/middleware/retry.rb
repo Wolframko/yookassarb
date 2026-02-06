@@ -2,6 +2,7 @@
 
 module Yookassa
   module Middleware
+    # Faraday middleware that retries on 202/500 status codes and connection failures
     class Retry < Faraday::Middleware
       RETRYABLE_STATUSES = [202, 500].freeze
 
@@ -19,18 +20,24 @@ module Yookassa
 
           if RETRYABLE_STATUSES.include?(response.status) && attempt < @max_retries
             attempt += 1
-            sleep(@retry_delay * attempt)
+            wait(attempt)
             env.body = env.request_body
             next
           end
 
           return response
-        rescue Faraday::ConnectionFailed, Faraday::TimeoutError => e
-          raise e if attempt >= @max_retries
+        rescue Faraday::ConnectionFailed, Faraday::TimeoutError => error
+          raise error if attempt >= @max_retries
 
           attempt += 1
-          sleep(@retry_delay * attempt)
+          wait(attempt)
         end
+      end
+
+      private
+
+      def wait(attempt)
+        sleep(@retry_delay * attempt)
       end
     end
   end

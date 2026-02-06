@@ -2,6 +2,7 @@
 
 module Yookassa
   module Entities
+    # Deal entity with status helpers
     class Deal < Base
       def opened?
         status == "opened"

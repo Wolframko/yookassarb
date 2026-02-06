@@ -2,6 +2,7 @@
 
 module Yookassa
   module Resources
+    # REST resource for /v3/receipts endpoint
     class Receipt < Base
       def create(params, idempotency_key: nil)
         data = request(:post, "receipts", body: params, idempotency_key: idempotency_key)
@@ -14,12 +15,7 @@ module Yookassa
       end
 
       def list(**filters)
-        data = request(:get, "receipts", query: filters)
-        Entities::Collection.new(
-          items: data["items"] || [],
-          next_cursor: data["next_cursor"],
-          entity_class: Entities::Receipt
-        )
+        build_collection("receipts", entity_class: Entities::Receipt, query: filters)
       end
     end
   end

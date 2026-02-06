@@ -2,11 +2,12 @@
 
 module Yookassa
   module Entities
+    # Base entity class with dynamic attribute access via method_missing
     class Base
       attr_reader :attributes
 
       def initialize(data)
-        @attributes = normalize(data)
+        @attributes = self.class.send(:normalize, data)
       end
 
       def [](key)
@@ -33,17 +34,18 @@ module Yookassa
       end
 
       def wrap_value(value)
+        klass = self.class
         case value
         when Hash
-          self.class.new(value)
+          klass.new(value)
         when Array
-          value.map { |v| v.is_a?(Hash) ? self.class.new(v) : v }
+          value.map { |item| item.is_a?(Hash) ? klass.new(item) : item }
         else
           value
         end
       end
 
-      def normalize(data)
+      def self.normalize(data)
         case data
         when Hash
           data.transform_keys(&:to_s)
@@ -55,6 +57,7 @@ module Yookassa
           end
         end
       end
+      private_class_method :normalize
     end
   end
 end

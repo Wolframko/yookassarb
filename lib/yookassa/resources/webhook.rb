@@ -2,6 +2,7 @@
 
 module Yookassa
   module Resources
+    # REST resource for /v3/webhooks endpoint
     class Webhook < Base
       def create(params, idempotency_key: nil)
         data = request(:post, "webhooks", body: params, idempotency_key: idempotency_key)

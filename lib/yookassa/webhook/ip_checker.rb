@@ -4,6 +4,7 @@ require "ipaddr"
 
 module Yookassa
   module Webhook
+    # Validates webhook request source IP against YooKassa trusted networks
     module IpChecker
       TRUSTED_NETWORKS = [
         IPAddr.new("185.71.76.0/27"),
