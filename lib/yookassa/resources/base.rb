@@ -5,7 +5,9 @@ require "securerandom"
 
 module Yookassa
   module Resources
-    # Base resource class with HTTP request handling and connection setup
+    # Base resource class with HTTP request handling and connection setup.
+    # Subclasses may declare +resource_path+ and +entity_class+ to inherit
+    # default create/find/list behaviour.
     class Base
       attr_reader :client
 
@@ -13,7 +15,45 @@ module Yookassa
         @client = client
       end
 
+      def self.resource_path(path = nil)
+        if path
+          @resource_path = path
+        else
+          @resource_path
+        end
+      end
+
+      def self.entity_class(klass = nil)
+        if klass
+          @entity_class = klass
+        else
+          @entity_class
+        end
+      end
+
+      def create(params, idempotency_key: nil)
+        data = request(:post, resource_path, body: params, idempotency_key: idempotency_key)
+        entity_class.new(data)
+      end
+
+      def find(resource_id)
+        data = request(:get, "#{resource_path}/#{resource_id}")
+        entity_class.new(data)
+      end
+
+      def list(**filters)
+        build_collection(resource_path, entity_class: entity_class, query: filters)
+      end
+
       private
+
+      def resource_path
+        self.class.resource_path
+      end
+
+      def entity_class
+        self.class.entity_class
+      end
 
       def connection
         @connection ||= build_connection
@@ -38,24 +78,23 @@ module Yookassa
       end
 
       def build_connection
-        config = client.config
-        creds = config.credentials
-
         Faraday.new(url: "https://api.yookassa.ru/v3") do |conn|
           configure_headers(conn)
-          configure_auth(conn, creds)
-          configure_middleware(conn, config)
+          configure_auth(conn)
+          configure_middleware(conn)
           conn.adapter Faraday.default_adapter
         end
       end
 
       def configure_headers(conn)
         conn.request :json
-        conn.headers["Content-Type"] = "application/json"
-        conn.headers["User-Agent"] = "yookassa-ruby/#{Yookassa::VERSION}"
+        headers = conn.headers
+        headers["Content-Type"] = "application/json"
+        headers["User-Agent"] = "yookassa-ruby/#{Yookassa::VERSION}"
       end
 
-      def configure_auth(conn, creds)
+      def configure_auth(conn)
+        creds = client.config.credentials
         auth_token = creds[:auth_token]
         if auth_token
           conn.request :authorization, "Bearer", auth_token
@@ -64,7 +103,8 @@ module Yookassa
         end
       end
 
-      def configure_middleware(conn, config)
+      def configure_middleware(conn)
+        config = client.config
         conn.use Yookassa::Middleware::Idempotency
         conn.use Yookassa::Middleware::Retry,
                  max_retries: config.max_retries,

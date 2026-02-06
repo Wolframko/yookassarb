@@ -91,72 +91,51 @@ module Yookassa
     end
   end
 
-  # Provides convenient class methods for refund operations
-  class Refund
+  # Base class for convenience shortcuts that delegate CRUD to default_client
+  class ResourceShortcut
     class << self
-      def create(params, idempotency_key: nil)
-        Yookassa.default_client.refunds.create(params, idempotency_key: idempotency_key)
+      def delegates_to(method)
+        @resource_method = method
       end
 
-      def find(refund_id)
-        Yookassa.default_client.refunds.find(refund_id)
+      def create(params, idempotency_key: nil)
+        resource.create(params, idempotency_key: idempotency_key)
+      end
+
+      def find(resource_id)
+        resource.find(resource_id)
       end
 
       def list(**filters)
-        Yookassa.default_client.refunds.list(**filters)
+        resource.list(**filters)
+      end
+
+      private
+
+      def resource
+        Yookassa.default_client.public_send(@resource_method)
       end
     end
+  end
+
+  # Provides convenient class methods for refund operations
+  class Refund < ResourceShortcut
+    delegates_to :refunds
   end
 
   # Provides convenient class methods for receipt operations
-  class Receipt
-    class << self
-      def create(params, idempotency_key: nil)
-        Yookassa.default_client.receipts.create(params, idempotency_key: idempotency_key)
-      end
-
-      def find(receipt_id)
-        Yookassa.default_client.receipts.find(receipt_id)
-      end
-
-      def list(**filters)
-        Yookassa.default_client.receipts.list(**filters)
-      end
-    end
+  class Receipt < ResourceShortcut
+    delegates_to :receipts
   end
 
   # Provides convenient class methods for payout operations
-  class Payout
-    class << self
-      def create(params, idempotency_key: nil)
-        Yookassa.default_client.payouts.create(params, idempotency_key: idempotency_key)
-      end
-
-      def find(payout_id)
-        Yookassa.default_client.payouts.find(payout_id)
-      end
-
-      def list(**filters)
-        Yookassa.default_client.payouts.list(**filters)
-      end
-    end
+  class Payout < ResourceShortcut
+    delegates_to :payouts
   end
 
   # Provides convenient class methods for deal operations
-  class Deal
-    class << self
-      def create(params, idempotency_key: nil)
-        Yookassa.default_client.deals.create(params, idempotency_key: idempotency_key)
-      end
-
-      def find(deal_id)
-        Yookassa.default_client.deals.find(deal_id)
-      end
-
-      def list(**filters)
-        Yookassa.default_client.deals.list(**filters)
-      end
-    end
+  class Deal < ResourceShortcut
+    delegates_to :deals
   end
 
   # Namespace for webhook notification handling and IP validation

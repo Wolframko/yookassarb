@@ -17,24 +17,28 @@ module Yookassa
 
         loop do
           response = @app.call(env)
+          return response unless retryable_status?(response, attempt)
 
-          if RETRYABLE_STATUSES.include?(response.status) && attempt < @max_retries
-            attempt += 1
-            wait(attempt)
-            env.body = env.request_body
-            next
-          end
+          attempt = prepare_retry(attempt, env)
+        rescue Faraday::ConnectionFailed, Faraday::TimeoutError => e
+          raise e if attempt >= @max_retries
 
-          return response
-        rescue Faraday::ConnectionFailed, Faraday::TimeoutError => error
-          raise error if attempt >= @max_retries
-
-          attempt += 1
-          wait(attempt)
+          attempt = prepare_retry(attempt, env)
         end
       end
 
       private
+
+      def retryable_status?(response, attempt)
+        RETRYABLE_STATUSES.include?(response.status) && attempt < @max_retries
+      end
+
+      def prepare_retry(attempt, env)
+        attempt += 1
+        wait(attempt)
+        env.body = env.request_body
+        attempt
+      end
 
       def wait(attempt)
         sleep(@retry_delay * attempt)
