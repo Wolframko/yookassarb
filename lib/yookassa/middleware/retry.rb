@@ -2,10 +2,18 @@
 
 module Yookassa
   module Middleware
-    # Faraday middleware that retries on 202/500 status codes and connection failures
+    # Faraday middleware that retries requests on transient failures.
+    #
+    # Retries on HTTP 202 (object not ready yet), 500 (server error),
+    # and Faraday connection/timeout exceptions. Uses linear backoff
+    # with configurable delay.
     class Retry < Faraday::Middleware
+      # HTTP status codes that trigger a retry.
       RETRYABLE_STATUSES = [202, 500].freeze
 
+      # @param app [#call] the next middleware in the Faraday stack
+      # @param max_retries [Integer] maximum number of retry attempts (default: 3)
+      # @param retry_delay [Float] base delay in seconds, multiplied by attempt number (default: 1.8)
       def initialize(app, max_retries: 3, retry_delay: 1.8)
         super(app)
         @max_retries = max_retries

@@ -2,18 +2,38 @@
 
 module Yookassa
   module Entities
-    # Base entity class with dynamic attribute access via method_missing
+    # Base entity class that wraps API response hashes with dynamic attribute access.
+    #
+    # Attributes returned by the API are accessible as methods via +method_missing+.
+    # Nested hashes are automatically wrapped into entity instances, and arrays of
+    # hashes become arrays of entities.
+    #
+    # @example
+    #   entity = Yookassa::Entities::Base.new(id: "abc", amount: { value: "100", currency: "RUB" })
+    #   entity.id              # => "abc"
+    #   entity.amount.value    # => "100"
+    #   entity[:id]            # => "abc"
+    #   entity.to_h            # => { "id" => "abc", "amount" => { "value" => "100", "currency" => "RUB" } }
     class Base
+      # @return [Hash<String, Object>] normalized attribute hash (string keys)
       attr_reader :attributes
 
+      # @param data [Hash, #to_h] raw API response data
       def initialize(data)
         @attributes = self.class.send(:normalize, data)
       end
 
+      # Hash-style attribute access.
+      #
+      # @param key [String, Symbol] attribute name
+      # @return [Object, nil]
       def [](key)
         @attributes[key.to_s]
       end
 
+      # Returns the raw attribute hash.
+      #
+      # @return [Hash<String, Object>]
       def to_h
         @attributes
       end
