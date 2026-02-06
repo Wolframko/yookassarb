@@ -4,8 +4,15 @@ require "json"
 
 module Yookassa
   module Middleware
-    # Faraday middleware that maps HTTP error responses to custom exceptions
+    # Faraday middleware that maps HTTP error responses to typed exceptions.
+    #
+    # Inspects the response status and raises the appropriate {ApiError} subclass.
+    # The error body is parsed to extract YooKassa error code, description,
+    # and parameter name when available.
+    #
+    # @see Yookassa::ApiError
     class ErrorHandler < Faraday::Middleware
+      # Maps HTTP status codes to error classes.
       ERROR_MAP = {
         400 => Yookassa::BadRequestError,
         401 => Yookassa::UnauthorizedError,
