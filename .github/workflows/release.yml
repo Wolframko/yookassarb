@@ -60,7 +60,7 @@ jobs:
       - name: Push to RubyGems
         run: gem push *.gem
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: v${{ needs.build.outputs.version }}
           name: v${{ needs.build.outputs.version }}
